@@ -9,7 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class KNM {
-
+    // brak k;
+    // wywal caly kod
+    // grupe treningowa podziel na grupy
+    // dla kazdej z nich wyjmij k srodkow
+    // policz odlegosci zapisz w liscie
+    // policz srednie + znowu zapiszw liscie
+    // porownaj czy srodki sie nie zmienily
+    // jezeli tak to znajdz inne srodki
+    // tak do skutku ;)
     public KNM(List<VectorModel> testGroup, List<VectorModel> trainingGroup) {
         double margin = 0.2;
         int successCounter = 0;

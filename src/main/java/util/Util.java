@@ -31,6 +31,7 @@ public class Util {
                 .sorted(Comparator.comparing(VectorModel::getName))
                 .collect(Collectors.groupingBy(VectorModel::getName));
 
+
         sortedMap.forEach((k, v) -> {
             List<VectorModel> groupListItems = sortedMap.get(k);
             newTrainingGroup.add(new VectorModel(groupListItems.get(0).getName(), Util.listFeatureWithAvg(groupListItems)));

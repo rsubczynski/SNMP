@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SelekcjaCechMet1 {
-
+public class SelekcjaCechD1 {
+    //porownaj kazda ceche z jednego zbiou i z 2 a i b np a1 i b1 wylicz fishera sprawdz wynik
     private List<VectorModel> selectionLIst = new ArrayList<>();
 
     public List<Selection1Result> selekcjaCech(int limit) {
@@ -73,7 +73,6 @@ public class SelekcjaCechMet1 {
     private boolean isThisSameName(List<VectorModel> vectorModelList, VectorModel vm) {
         return vm.getName().equals(vectorModelList.get(0).getName());
     }
-
 
 }
 

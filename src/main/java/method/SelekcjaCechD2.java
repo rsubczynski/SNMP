@@ -8,7 +8,7 @@ import modules.FileManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SelekcjaCechMet2 {
+public class SelekcjaCechD2 {
 
     private Map<String, List<VectorModel>> sortedMapItemByGroupName =
             FileManager.getFileManagerInstance().getAllObjectList()
@@ -18,7 +18,7 @@ public class SelekcjaCechMet2 {
     private List<Selection2Result> featureSelectionResultList = new ArrayList<>();
     ;
 
-    public SelekcjaCechMet2() {
+    public SelekcjaCechD2() {
         int furnitureCount = FileManager.getFileManagerInstance().getAllObjectList().get(0).getFeatureList().size();
 
         for (int i = 0; i < furnitureCount; i++) {
