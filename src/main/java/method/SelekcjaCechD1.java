@@ -6,72 +6,60 @@ import modules.FileManager;
 import util.Util;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SelekcjaCechD1 {
-    //porownaj kazda ceche z jednego zbiou i z 2 a i b np a1 i b1 wylicz fishera sprawdz wynik
-    private List<VectorModel> selectionLIst = new ArrayList<>();
 
     public List<Selection1Result> selekcjaCech(int limit) {
 
-        List<VectorModel> allObjectWithAvg = Util.prepareVectorListWithAvg(FileManager.getFileManagerInstance().getAllObjectList());
 
         Map<String, List<VectorModel>> gropedMap = FileManager.getFileManagerInstance()
                 .getAllObjectList()
                 .stream()
                 .collect(Collectors.groupingBy(VectorModel::getName));
 
+        List<VectorModel> groupA = gropedMap.get("A");
+        List<VectorModel> groupB = gropedMap.get("B");
 
-        gropedMap.forEach((s, vectorModels) -> {
-                    VectorModel selekcja = new VectorModel(s);
-
-                    List<VectorModel> vectorModelList = gropedMap.get(s);
-
-                    double rank = 0d;
-                    Double averageDistance = 0d;
-                    for (int count = 0; count < vectorModelList.get(0).getFeatureList().size(); count++) {
-
-                        for (VectorModel item :vectorModelList) {
-                            Double rowValue = item.getFeatureList().get(count);
-                            averageDistance = allObjectWithAvg.stream().filter(vm -> isThisSameName(vectorModelList, vm)).findFirst().get().getFeatureList().get(count);
-                            rank += Math.pow((rowValue - averageDistance), 2);
-
-                        }
-                        selekcja.set(averageDistance, Math.sqrt(rank));
-                    }
-                    selectionLIst.add(selekcja);
-                }
-
-        );
-
-        List<Selection1Result> results = new ArrayList<>();
-        for (int index = 0; index < selectionLIst.get(0).getFeatureList().size(); index++) {
-
-            double featureMinus = 0;
-            double odchylanieSum = 0;
-            for (VectorModel vectorModel : selectionLIst) {
-                featureMinus = -vectorModel.getFeatureList().get(index);
-                odchylanieSum = +vectorModel.getOdchylenie().get(index);
-            }
-            double fisher = (Math.abs(featureMinus)) / odchylanieSum;
-            results.add(new Selection1Result(index, fisher));
-        }
-
-        return sortResult(results,limit);
-    }
-
-    private List<Selection1Result> sortResult(List<Selection1Result> results, int limit) {
-        return results
-                .stream()
-                .sorted((p1,p2) -> Double.compare(p2.getFisher(), p1.getFisher()))
+        return calc(groupA,groupB).stream()
+                .sorted(Comparator.comparingDouble(Selection1Result::getFisher).reversed())
                 .limit(limit)
                 .collect(Collectors.toList());
     }
 
-    private boolean isThisSameName(List<VectorModel> vectorModelList, VectorModel vm) {
-        return vm.getName().equals(vectorModelList.get(0).getName());
+    private List<Selection1Result> calc(List<VectorModel> groupA, List<VectorModel> groupB) {
+        List<Selection1Result> tempList = new ArrayList<>();
+
+        for(int i=0; i<groupA.get(0).getFeatureList().size(); i++) {
+            int finalI = i;
+            double valueA = 0L;
+            double valueB = 0L;
+
+
+            Double avgGroup1Feature = groupA.stream().mapToDouble(item -> item.getFeatureList().get(finalI)).average().getAsDouble();
+            Double avgGroup2Feature = groupA.stream().mapToDouble(item -> item.getFeatureList().get(finalI)).average().getAsDouble();
+
+            for (VectorModel vectorModel : groupA) {
+                valueA += Math.pow(vectorModel.getFeatureList().get(finalI) - avgGroup1Feature, 2);
+            }
+
+            for (VectorModel vectorModel : groupB) {
+                valueB += Math.pow(vectorModel.getFeatureList().get(finalI) - avgGroup2Feature, 2);
+            }
+
+            double dot1 = Math.sqrt(valueA);
+            double dot2 = Math.sqrt(valueB);
+
+            double fisher = (Math.abs(avgGroup1Feature - avgGroup2Feature)) / dot1 + dot2;
+            fisher = Double.isNaN(fisher) ? fisher : 0;
+            tempList.add(new Selection1Result(finalI,fisher));
+
+        }
+
+        return tempList;
     }
 
 }

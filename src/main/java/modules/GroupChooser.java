@@ -64,6 +64,10 @@ public class GroupChooser {
     private List<VectorModel> select(List<VectorModel> startObjecsList, List<Integer> featureIdList) {
         List<VectorModel> selectionList = new ArrayList<>();
 
+        if(featureIdList.size() == 0){
+            return new ArrayList<>();
+        }
+
         for (VectorModel obj : startObjecsList) {
             VectorModel temp = new VectorModel(obj.getName(), new ArrayList<>());
             for(Integer id : featureIdList){

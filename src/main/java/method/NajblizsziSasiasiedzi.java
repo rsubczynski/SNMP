@@ -16,7 +16,7 @@ public class NajblizsziSasiasiedzi {
         KNN(K, testGroups, trainingGroups);
     }
 
-    void KNN(int K, List<VectorModel> testGroups, List<VectorModel> trainingGroups) {
+    private void KNN(int K, List<VectorModel> testGroups, List<VectorModel> trainingGroups) {
 
         AtomicInteger result = new AtomicInteger();
 

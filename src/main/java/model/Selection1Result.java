@@ -6,8 +6,8 @@ public class Selection1Result {
     private int c1;
     private double fisher;
 
-    public Selection1Result(int c1, double fisher) {
-        this.c1 = c1;
+    public Selection1Result(int featureNumber, double fisher) {
+        this.c1 = featureNumber;
         this.fisher = fisher;
     }
 
