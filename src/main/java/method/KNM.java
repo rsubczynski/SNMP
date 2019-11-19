@@ -1,52 +1,124 @@
 package method;
 
+import model.KnmHelper;
+import model.KnmPoint;
 import model.Point;
 import model.VectorModel;
 import util.Util;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static util.Util.showResult;
+
+
 public class KNM {
-    // brak k;
-    // wywal caly kod
-    // grupe treningowa podziel na grupy
-    // dla kazdej z nich wyjmij k srodkow
-    // policz odlegosci zapisz w liscie
-    // policz srednie + znowu zapiszw liscie
-    // porownaj czy srodki sie nie zmienily
-    // jezeli tak to znajdz inne srodki
-    // tak do skutku ;)
-    public KNM(List<VectorModel> testGroup, List<VectorModel> trainingGroup) {
-        double margin = 0.2;
-        int successCounter = 0;
+    private static List<String> tempGroupNameTable = Arrays.asList("A","B","C");
 
-        List<Point> x = start(testGroup, trainingGroup);
-        List<Point> y = start(testGroup, Util.prepareVectorListWithAvg(trainingGroup));
+    public KNM(List<VectorModel> testGroup, List<VectorModel> trainingGroup, int k) {
+        List<VectorModel> results = new ArrayList<>();
 
-        for (int i = 0; i < x.size(); i++) {
+        Map<String, List<VectorModel>> gropedMap = trainingGroup
+                .stream()
+                .collect(Collectors.groupingBy(VectorModel::getName));
 
-            double downMargin = y.get(i).getDistance() - (y.get(i).getDistance() * margin);
-            double topMargin = y.get(i).getDistance() + (y.get(i).getDistance() * margin);
-            double firstDistance = x.get(i).getDistance();
+        List<VectorModel> groupASuccessList;
+        List<VectorModel> groupBSuccessList;
+        do {
+            groupASuccessList = start(k, gropedMap.get("A"));
+        }
+        while (!(groupASuccessList.size() == k));
 
-            if (downMargin <= firstDistance && firstDistance <= topMargin)  {
-                 successCounter ++;
+        do {
+            groupBSuccessList = start(k, gropedMap.get("B"));
+        }
+        while (!(groupBSuccessList.size() == k));
+
+        results.addAll(groupASuccessList);
+        results.addAll(groupBSuccessList);
+
+
+        List<Point> pointList = testGroup
+                .stream()
+                .map(point -> results
+                        .stream()
+                        .map(trainingVector -> new Point(point, trainingVector))
+                        .min(Comparator.comparingDouble(Point::getDistance))
+                        .get())
+                .collect(Collectors.toList());
+
+        showResult("K-NM", testGroup, pointList);
+
+    }
+
+    private List<VectorModel> start(int k, List<VectorModel> group) {
+        List<VectorModel> randomPoints = new ArrayList<>();
+        List<KnmHelper> knmHelperList = new ArrayList<>();
+
+        // losowanie srodkow
+        for (int i = 0; i < k; i++) {
+            int index = k <= 1 ? i : randomNumber(group);
+
+            VectorModel randomElement = group.get(index);
+            knmHelperList.add(new KnmHelper(randomElement, tempGroupNameTable.get(i)));
+
+        }
+        // Przypisanie do grupy pierwszej A lub B
+        List<KnmPoint> pierwszeZnalezienieGrup = group.stream()
+                .map(item -> knmHelperList
+                        .stream()
+                        .map(vm -> new KnmPoint(new Point(vm.getHelpVm(), item), vm.getTempolaryGroupName()))
+                        .min(Comparator.comparingDouble(KnmPoint::getDistance))
+                        .get())
+                .collect(Collectors.toList());
+
+        //Podzial na grupy
+        Map<String, List<KnmPoint>> grupedK = pierwszeZnalezienieGrup.stream().collect(Collectors.groupingBy(KnmPoint::getName));
+
+        // czyszenie srodkow
+        knmHelperList.clear();
+
+
+        // Oblicznie nowych srodkow
+        for (int i=0; i<grupedK.size() ;i++){
+           List<VectorModel> noweSrodki = grupedK.get(tempGroupNameTable.get(i))
+                   .stream()
+                   .map(KnmPoint::getStartVM)
+                   .collect(Collectors.toList());
+
+            knmHelperList.add(new KnmHelper(Util.prepareVectorListWithAvg(noweSrodki).get(0), tempGroupNameTable.get(i)));
+            randomPoints.add(Util.prepareVectorListWithAvg(noweSrodki).get(0));
+
+
+        }
+
+        // Przypisanie wedlug nowych srodkow
+        List<KnmPoint> drugieDnalezienieGrup = group.stream()
+                .map(item -> knmHelperList
+                        .stream()
+                        .map(vm -> new KnmPoint(new Point(vm.getHelpVm(), item), vm.getTempolaryGroupName()))
+                        .min(Comparator.comparingDouble(KnmPoint::getDistance))
+                        .get())
+                .collect(Collectors.toList());
+
+
+        int counter = 0;
+        // Porównanie
+        for(int i = 0; i< group.size(); i++){
+            if(pierwszeZnalezienieGrup.get(i).getName().equals(drugieDnalezienieGrup.get(i).getName())){
+                counter++;
             }
         }
 
-        float percent = (successCounter * 100.0f) / x.size();
-        System.out.println("KNM" + ": " + successCounter + "/" + x.size() + " " + percent + "%");
-
+        return counter == group.size() ? randomPoints : new ArrayList<>();
     }
 
-    private List<Point> start(List<VectorModel> testGroup, List<VectorModel> trainingGroup) {
 
-        return testGroup.stream().map(point -> trainingGroup.stream()
-                .map(trainingVector -> new Point(point, trainingVector))
-                .min(Comparator.comparingDouble(Point::getDistance))
-                .get())
-                .collect(Collectors.toList());
+    private int randomNumber(List<VectorModel> trainingGroup) {
+        Random r = new Random();
+        int low = 0;
+        int high = trainingGroup.size();
+        return r.nextInt(high - low) + low;
     }
+
 }

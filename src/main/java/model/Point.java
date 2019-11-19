@@ -5,6 +5,8 @@ public class Point {
     private String pointParentName;
     private String vectorName;
     private double distance = 0;
+    private VectorModel vm;
+
 
     public Point(VectorModel point, VectorModel trainingVector) {
         for (int i = 0; i < point.getFeatureList().size(); i++) {
@@ -12,7 +14,9 @@ public class Point {
         }
         pointParentName = point.getName();
         vectorName = trainingVector.getName();
+        this.vm = point;
     }
+
 
     public String getVectorName() {
         return vectorName;
@@ -20,6 +24,10 @@ public class Point {
 
     public double getDistance() {
         return distance;
+    }
+
+    public VectorModel getVm() {
+        return vm;
     }
 
     public boolean isThisSameName() {

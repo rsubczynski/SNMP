@@ -47,7 +47,7 @@ public class SelekcjaCechD2 {
         for (String groupName : groupNameList) {
             List<Double> furnitureGroupC1List = sortedMapItemByGroupName.get(groupName).stream().map(item -> item.getFeatureList().get(c1)).collect(Collectors.toList());
             List<Double> furnitureGroupC2List = sortedMapItemByGroupName.get(groupName).stream().map(item -> item.getFeatureList().get(c2)).collect(Collectors.toList());
-            pointForSelection.add(new Selection2MatrixOperation(groupName, furnitureGroupC1List, furnitureGroupC2List));
+            pointForSelection.add(new Selection2MatrixOperation(furnitureGroupC1List, furnitureGroupC2List));
         }
 
         for (Selection2MatrixOperation cechy : pointForSelection) {

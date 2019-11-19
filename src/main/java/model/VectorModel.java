@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -9,7 +8,6 @@ public class VectorModel {
 
     private String name;
     private List<Double> featureList;
-    private List<Double> odchylenie;
 
     public VectorModel(List<String> list) {
         this.name = list.get(0);
@@ -21,24 +19,10 @@ public class VectorModel {
         this.featureList = featureList;
     }
 
-    public VectorModel(String name) {
-        this.name = name;
-        this.featureList = featureList = new ArrayList<>();
-        this.odchylenie = odchylenie = new ArrayList<>();
-    }
-
-    public void set(Double feature, Double odchylenie){
-        featureList.add(feature);
-        this.odchylenie.add(odchylenie);
-    }
-
     public void setFeature(Double feature) {
         this.featureList.add(feature);
     }
 
-    public List<Double> getOdchylenie() {
-        return odchylenie;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -72,4 +56,5 @@ public class VectorModel {
                 ", featureList=" + featureList +
                 '}';
     }
+
 }

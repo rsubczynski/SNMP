@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="radek" />
         <module name="SNMP" />
+        <module name="radek" />
       </profile>
     </annotationProcessing>
   </component>

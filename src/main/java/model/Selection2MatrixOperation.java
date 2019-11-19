@@ -6,15 +6,13 @@ import java.util.List;
 
 public class Selection2MatrixOperation {
 
-    private String name;
     private Double avgC1;
     private Double avgC2;
     private SimpleMatrix matrix;
     private SimpleMatrix tMatrix;
 
 
-    public Selection2MatrixOperation(String groupName, List<Double> furnitureGroupC1List, List<Double> furnitureGroupC2List) {
-        this.name = groupName;
+    public Selection2MatrixOperation(List<Double> furnitureGroupC1List, List<Double> furnitureGroupC2List) {
         this.avgC1 = furnitureGroupC1List.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
         this.avgC2 = furnitureGroupC2List.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
 

@@ -13,9 +13,8 @@ public class SMPD {
     SMPD(int percentCountFromFileToLearn) {
 
 
-        List<Selection1Result> selection1Result = new SelekcjaCechD1().selekcjaCech(5);
+        List<Selection1Result> selection1Result = new SelekcjaCechD1().selekcjaCech(2);
         List<Integer> featureList1 = selection1Result.stream().map(Selection1Result::getC1).collect(Collectors.toList());
-
 
         Selection2Result selection12Result = new SelekcjaCechD2().getSelekcja2Cech();
         List<Integer> featureList2 = Arrays.asList(selection12Result.getC1(), selection12Result.getC2());
@@ -32,7 +31,7 @@ public class SMPD {
         List<VectorModel> testGroupSelection2 = GroupChooser.getGroupChooserInstance().getFilteredTestGroup(featureList2);
 
         findAnswer("Bez Selekcji", testGroupWithoutSelection,trainingGroupWithoutSelection);
-        findAnswer("Selekcja 2 cech D1", testGroupSelection1,trainingGroupSelection1); // do poprawy
+        findAnswer("Selekcja 2 cech D1", testGroupSelection1,trainingGroupSelection1);
         findAnswer("Selekcja 2 cech D2", testGroupSelection2,trainingGroupSelection2);
     }
 
@@ -48,7 +47,7 @@ public class SMPD {
         new NajbliższySasiad(testGroup, trainingGroup);
         new NajblizsziSasiasiedzi(5, testGroup, trainingGroup);
         new NajmniejszychSrednich(testGroup, trainingGroup);
-        new KNM(testGroup, trainingGroup); // to do poprawy
+        new KNM(testGroup, trainingGroup,2);
 
 
         System.out.println("---------------------------------------------------------------------------------");

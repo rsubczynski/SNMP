@@ -3,7 +3,6 @@ package method;
 import model.Selection1Result;
 import model.VectorModel;
 import modules.FileManager;
-import util.Util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,11 +49,11 @@ public class SelekcjaCechD1 {
                 valueB += Math.pow(vectorModel.getFeatureList().get(finalI) - avgGroup2Feature, 2);
             }
 
-            double dot1 = Math.sqrt(valueA);
-            double dot2 = Math.sqrt(valueB);
+            double dot1 = Math.sqrt(valueA/groupA.size());
+            double dot2 = Math.sqrt(valueB/groupB.size());
 
             double fisher = (Math.abs(avgGroup1Feature - avgGroup2Feature)) / dot1 + dot2;
-            fisher = Double.isNaN(fisher) ? fisher : 0;
+            fisher = Double.isNaN(fisher) ? 0 : fisher;
             tempList.add(new Selection1Result(finalI,fisher));
 
         }
