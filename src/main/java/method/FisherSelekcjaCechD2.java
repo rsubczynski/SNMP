@@ -8,7 +8,7 @@ import modules.FileManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SelekcjaCechD2 {
+public class FisherSelekcjaCechD2 {
 
     private Map<String, List<VectorModel>> sortedMapItemByGroupName =
             FileManager.getFileManagerInstance().getAllObjectList()
@@ -16,13 +16,12 @@ public class SelekcjaCechD2 {
                     .collect(Collectors.groupingBy(VectorModel::getName));
 
     private List<Selection2Result> featureSelectionResultList = new ArrayList<>();
-    ;
 
-    public SelekcjaCechD2() {
-        int furnitureCount = FileManager.getFileManagerInstance().getAllObjectList().get(0).getFeatureList().size();
+    public FisherSelekcjaCechD2() {
+        int size = FileManager.getFileManagerInstance().getAllObjectList().get(0).getFeatureList().size();
 
-        for (int i = 0; i < furnitureCount; i++) {
-            for (int j = 0; j < furnitureCount; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 int finalI = i;
                 int finalJ = j;
                 if (featureSelectionResultList.parallelStream()

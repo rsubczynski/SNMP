@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SelekcjaCechD1 {
+public class FisherSelekcjaCechD1 {
 
     public List<Selection1Result> selekcjaCech(int limit) {
 
